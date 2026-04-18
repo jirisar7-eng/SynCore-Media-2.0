@@ -39,6 +39,11 @@
       "id": "SYN_EMERGENCY_2.6",
       "status": "completed",
       "description": "Emergency Repair: Fixed 403 Forbidden with strict Vercel Project ID, massive red UI error diagnostics, and SearchPage UI overhaul."
+    },
+    {
+      "id": "SYN_DIAG_2.7",
+      "status": "completed",
+      "description": "System Diagnostic v2.7: Enhanced Vercel debug logging, Team ID auto-check hints, and authentication context verification in System UI."
     }
   ]
 }
