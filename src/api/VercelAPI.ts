@@ -1,4 +1,4 @@
-/* ID-START: SY-VERCEL-2.6-EMERGENCY */
+/* ID-START: SY-VERCEL-2.7-DIAGNOSTIC */
 import axios from 'axios';
 
 export const VercelAPI = {
@@ -7,10 +7,11 @@ export const VercelAPI = {
     const projectId = import.meta.env.VITE_VERCEL_PROJECT_ID;
     const teamId = import.meta.env.VITE_VERCEL_TEAM_ID;
 
-    if (!token) throw new Error("CRITICAL: VITE_VERCEL_TOKEN is undefined.");
-    if (!projectId) throw new Error("CRITICAL: VITE_VERCEL_PROJECT_ID is undefined.");
+    if (!token) throw new Error("CRITICAL: VITE_VERCEL_TOKEN is undefined in environment.");
+    if (!projectId) throw new Error("CRITICAL: VITE_VERCEL_PROJECT_ID is undefined in environment.");
 
     try {
+      console.log(`[VERCEL DEBUG] Attempting fetch for Project: ${projectId}${teamId ? ` (Team: ${teamId})` : ''}`);
       const response = await axios.get('https://api.vercel.com/v6/deployments', {
         headers: { 
           "Authorization": `Bearer ${token}`,
@@ -23,9 +24,19 @@ export const VercelAPI = {
       });
       return response.data.deployments || [];
     } catch (error: any) {
-      // Enhanced diagnostic logging for emergency repair
+      const status = error.response?.status;
       const details = error.response?.data?.error || error.message;
-      console.error(`[VERCEL REPAIR] Auth failure with Project: ${projectId}. Details:`, details);
+      
+      console.group(`[VERCEL ERROR] ${status || 'Network Error'}`);
+      console.error("Path: /v6/deployments");
+      console.error("Project ID:", projectId);
+      console.error("Team ID:", teamId || "Not Provided");
+      console.error("Response Details:", details);
+      if (status === 401) console.error("HINT: Your Vercel Token is invalid or expired.");
+      if (status === 403) console.error("HINT: Access Forbidden. This usually means the Project ID belongs to a Team, and you MUST provide VITE_VERCEL_TEAM_ID.");
+      if (status === 404) console.error("HINT: Project ID not found. Verify it starts with 'prj_'.");
+      console.groupEnd();
+
       throw error;
     }
   },
@@ -38,4 +49,4 @@ export const VercelAPI = {
     ];
   }
 };
-/* ID-END: SY-VERCEL-2.6-EMERGENCY */
+/* ID-END: SY-VERCEL-2.7-DIAGNOSTIC */
