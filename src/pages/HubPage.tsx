@@ -48,6 +48,12 @@ export default function HubPage() {
               <span className="text-[10px] uppercase tracking-widest opacity-40">Active Project ID</span>
               <span className="text-sm font-mono bg-zinc-100 px-3 py-1 font-bold">{diagId}</span>
             </div>
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] uppercase tracking-widest opacity-40">Active Team ID</span>
+              <span className="text-sm font-mono bg-zinc-100 px-3 py-1 font-bold">
+                {import.meta.env.VITE_VERCEL_TEAM_ID || 'UNSET (Required for Team Projects)'}
+              </span>
+            </div>
           </div>
           <button 
             onClick={() => window.location.reload()}
